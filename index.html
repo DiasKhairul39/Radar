@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Deskripsi singkat tentang Universitas Muhammadiyah Surakarta">
+  <link rel="icon" href="https://logowik.com/content/uploads/images/radar1781.logowik.com.webp" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://logowik.com/content/uploads/images/radar1781.logowik.com.webp">
+  <link rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+    integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+    crossorigin="anonymous">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      line-height: 1.6;
+      transition: background-color 0.5s ease; /* Efek transisi yang lebih lambat */
+      font-size: 16px;
+    }
+
+    header {
+      background-color: #00add6;
+      padding: 20px;
+      color: #fff;
+      display: flex;
+      flex-wrap: wrap; /* Perbaikan untuk tampilan mobile */
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      margin-right: 10px; /* Jarak antara logo dan judul */
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+      color: #fff;
+      flex: 1; /* Biarkan judul mengambil sisa ruang di sebelah logo */
+    }
+
+    .sensor-card {
+      background-color: #f8f8f8;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      transition: background-color 0.3s ease; /* Efek transisi warna untuk sensor card */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sensor-icon {
+      color: #00add6;
+      font-size: 3rem;
+    }
+
+    .reading-label {
+      font-size: 1.2rem;
+      color: #333;
+      margin-top: 10px;
+    }
+
+    .reading-value {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .units {
+      font-size: 1rem;
+      color: #555;
+    }
+
+    .last-updated {
+      font-size: 1rem;
+      color: #888;
+      border-top: 1px solid #ccc;
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+
+    /* Animasi bounce saat nilai diubah */
+    .bounce {
+      animation: bounce 0.6s ease;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-20px);
+      }
+      60% {
+        transform: translateY(-10px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Logo_UMS_Surakarta.png/1200px-Logo_UMS_Surakarta.png"
+      alt="Logo" class="logo">
+    <h1>Universitas Muhammadiyah Surakarta</h1>
+  </header>
+
+  <div id="sensorCard" class="sensor-card">
+    <i class="sensor-icon fas fa-road"></i>
+    <span class="reading-label">Jarak</span>
+    <span id="Distance" class="reading-value">0</span>
+    <sup class="units">Cm</sup>
+  </div>
+  <p class="last-updated">Terakhir Diperbarui: <span id="LastUpdated">N/A</span></p>
+
+  <script>
+    function updateSensorReading() {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          var distance = this.responseText;
+          document.getElementById("Distance").innerHTML = distance;
+          document.getElementById("Distance").classList.add("bounce"); // Tambahkan kelas animasi
+          setTimeout(() => {
+            document.getElementById("Distance").classList.remove("bounce"); // Hapus kelas animasi setelah selesai
+          }, 600);
+          document.getElementById("LastUpdated").innerHTML = getCurrentTime();
+          updateSensorCard(distance);
+        }
+      };
+      xhttp.open("GET", "/distanceCm", true);
+      xhttp.send();
+    }
+
+    function getCurrentTime() {
+      var now = new Date();
+      var hours = now.getHours();
+      var minutes = now.getMinutes();
+      var seconds = now.getSeconds();
+      return `${hours}:${minutes}:${seconds}`;
+    }
+
+    function updateSensorCard(distance) {
+      var sensorCard = document.getElementById("sensorCard");
+      var color = "#00add6"; // Warna default
+
+      if (distance < 70) {
+        color = "#e74c3c"; // Merah untuk nilai kurang dari 50
+      } else if (distance >= 50 && distance < 150) {
+        color = "#f39c12"; // Orange untuk nilai antara 50 dan 100
+      }
+
+      sensorCard.style.backgroundColor = color;
+    }
+
+    setInterval(updateSensorReading, 1000);
+  </script>
+</body>
+
+</html>
