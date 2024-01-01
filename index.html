@@ -1,168 +1,425 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title>Radar</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Deskripsi singkat tentang Universitas Muhammadiyah Surakarta"
+    />
+    <link
+      rel="icon"
+      href="https://logowik.com/content/uploads/images/radar1781.logowik.com.webp"
+      type="image/x-icon"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="https://logowik.com/content/uploads/images/radar1781.logowik.com.webp"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+      integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+      crossorigin="anonymous"
+    />
+    <script src="https://code.highcharts.com/highcharts.js"></script>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Deskripsi singkat tentang Universitas Muhammadiyah Surakarta">
-  <link rel="icon" href="https://logowik.com/content/uploads/images/radar1781.logowik.com.webp" type="image/x-icon">
-  <link rel="apple-touch-icon" sizes="180x180" href="https://logowik.com/content/uploads/images/radar1781.logowik.com.webp">
-  <link rel="stylesheet"
-    href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-    integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
-    crossorigin="anonymous">
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-      line-height: 1.6;
-      transition: background-color 0.5s ease; /* Efek transisi yang lebih lambat */
-      font-size: 16px;
-    }
-
-    header {
-      background-color: #00add6;
-      padding: 20px;
-      color: #fff;
-      display: flex;
-      flex-wrap: wrap; /* Perbaikan untuk tampilan mobile */
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      width: 50px;
-      height: 50px;
-      margin-right: 10px; /* Jarak antara logo dan judul */
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 2rem;
-      color: #fff;
-      flex: 1; /* Biarkan judul mengambil sisa ruang di sebelah logo */
-    }
-
-    .sensor-card {
-      background-color: #f8f8f8;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      margin-top: 20px;
-      transition: background-color 0.3s ease; /* Efek transisi warna untuk sensor card */
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .sensor-icon {
-      color: #00add6;
-      font-size: 3rem;
-    }
-
-    .reading-label {
-      font-size: 1.2rem;
-      color: #333;
-      margin-top: 10px;
-    }
-
-    .reading-value {
-      font-size: 2rem;
-      font-weight: bold;
-      margin-top: 5px;
-    }
-
-    .units {
-      font-size: 1rem;
-      color: #555;
-    }
-
-    .last-updated {
-      font-size: 1rem;
-      color: #888;
-      border-top: 1px solid #ccc;
-      padding-top: 10px;
-      margin-top: 10px;
-    }
-
-    /* Animasi bounce saat nilai diubah */
-    .bounce {
-      animation: bounce 0.6s ease;
-    }
-
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
+    <style>
+      /* UI/UX Design Improvement */
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        line-height: 1.6;
+        transition: background-color 0.5s ease;
+        font-size: 16px;
+        background-color: #f2f2f2;
       }
-      40% {
-        transform: translateY(-20px);
+
+      header {
+        background-color: #00add6;
+        padding: 20px;
+        color: #fff;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        transition: background-color 0.3s ease;
       }
-      60% {
-        transform: translateY(-10px);
+
+      .logo {
+        width: 50px;
+        height: 50px;
+        margin-right: 10px;
+        border-radius: 50%;
+        transition: transform 0.3s ease;
       }
-    }
-  </style>
-</head>
 
-<body>
-  <header>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Logo_UMS_Surakarta.png/1200px-Logo_UMS_Surakarta.png"
-      alt="Logo" class="logo">
-    <h1>Universitas Muhammadiyah Surakarta</h1>
-  </header>
+      .logo:hover {
+        transform: scale(1.1);
+      }
 
-  <div id="sensorCard" class="sensor-card">
-    <i class="sensor-icon fas fa-road"></i>
-    <span class="reading-label">Jarak</span>
-    <span id="Distance" class="reading-value">0</span>
-    <sup class="units">Cm</sup>
-  </div>
-  <p class="last-updated">Terakhir Diperbarui: <span id="LastUpdated">N/A</span></p>
+      h1 {
+        margin: 0;
+        font-size: 2rem;
+        color: #fff;
+        flex: 1;
+        transition: color 0.3s ease;
+      }
 
-  <script>
-    function updateSensorReading() {
-      var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-          var distance = this.responseText;
-          document.getElementById("Distance").innerHTML = distance;
-          document.getElementById("Distance").classList.add("bounce"); // Tambahkan kelas animasi
-          setTimeout(() => {
-            document.getElementById("Distance").classList.remove("bounce"); // Hapus kelas animasi setelah selesai
-          }, 600);
-          document.getElementById("LastUpdated").innerHTML = getCurrentTime();
-          updateSensorCard(distance);
+      .sensor-card {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Improved box shadow */
+        margin-top: 20px;
+        transition: background-color 0.3s ease, transform 0.3s ease,
+          box-shadow 0.3s ease; /* Added box-shadow transition */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .sensor-card:hover {
+        background-color: #f2f2f2;
+        transform: translateY(-5px);
+      }
+
+      .sensor-icon {
+        color: #000000;
+        font-size: 3rem;
+        transition: color 0.3s ease;
+      }
+
+      .sensor-icon:hover {
+        color: #0077a3;
+      }
+
+      .reading-label {
+        font-size: 1.2rem;
+        color: #333;
+        margin-top: 10px;
+      }
+
+      .reading-value {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-top: 5px;
+        color: #0077a3;
+      }
+
+      .units {
+        font-size: 1rem;
+        color: #555;
+      }
+
+      .last-updated {
+        font-size: 1rem;
+        color: #888;
+        border-top: 1px solid #ccc;
+        padding-top: 10px;
+        margin-top: 10px;
+      }
+
+      .bounce {
+        animation: bounce 0.6s ease;
+      }
+
+      .search-form {
+        margin-top: 20px;
+      }
+
+      .search-input {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      .search-button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #0077a3;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .search-results {
+        margin-top: 20px;
+        text-align: left;
+      }
+      .container {
+        margin-top: 20px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .container:hover {
+        background-color: #f2f2f2;
+        transform: translateY(-5px);
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Logo_UMS_Surakarta.png/1200px-Logo_UMS_Surakarta.png"
+        alt="Logo"
+        class="logo"
+      />
+      <h1>Universitas Muhammadiyah Surakarta</h1>
+    </header>
+
+    <div id="sensorCard" class="sensor-card">
+      <i class="sensor-icon fas fa-road"></i>
+      <span class="reading-label">Jarak</span>
+      <span id="Distance" class="reading-value">0</span>
+      <sup class="units">Cm</sup>
+    </div>
+
+    <div id="pirStatus" class="sensor-card">
+      <i class="sensor-icon fas fa-walking"></i>
+      <span class="reading-label">Sensor Gerak</span>
+      <span id="pirStatusValue" class="reading-value">Tidak Aktif</span>
+    </div>
+
+    <div id="chart-distance" class="container"></div>
+
+    <p class="last-updated">
+      Terakhir Diperbarui: <span id="LastUpdated">N/A</span>
+    </p>
+
+    <!-- Form pencarian diperbarui -->
+    <div class="search-form">
+      <input
+        type="text"
+        id="searchInput"
+        class="search-input"
+        placeholder="Cari data sensor..."
+      />
+      <select id="searchFilter" class="search-input">
+        <option value="jarak">Jarak</option>
+        <option value="statusPIR">Sensor Gerak</option>
+      </select>
+      <button onclick="cariDataSensor()" class="search-button">Cari</button>
+    </div>
+
+    <!-- Hasil pencarian -->
+    <div id="searchResults" class="search-results"></div>
+
+    <script>
+      function simpanDataSensorLocal(jarak, statusPIR) {
+        const dataSensor = {
+          jarak: jarak,
+          statusPIR: statusPIR,
+          waktu: getCurrentTime(),
+        };
+
+        const existingData =
+          JSON.parse(localStorage.getItem("dataSensor")) || [];
+        existingData.push(dataSensor);
+        localStorage.setItem("dataSensor", JSON.stringify(existingData));
+      }
+
+      // Fungsi untuk memeriksa dan membersihkan data setiap 30 menit
+      function periksaDanBersihkanData() {
+        const lastCleanupTime =
+          parseInt(localStorage.getItem("lastCleanupTime")) || 0;
+        const currentTime = new Date().getTime();
+
+        // Jika lebih dari 30 menit sejak pembersihan terakhir
+        if (currentTime - lastCleanupTime > 30 * 60 * 1000) {
+          localStorage.removeItem("dataSensor");
+          localStorage.setItem("lastCleanupTime", currentTime.toString());
         }
-      };
-      xhttp.open("GET", "/distanceCm", true);
-      xhttp.send();
-    }
-
-    function getCurrentTime() {
-      var now = new Date();
-      var hours = now.getHours();
-      var minutes = now.getMinutes();
-      var seconds = now.getSeconds();
-      return `${hours}:${minutes}:${seconds}`;
-    }
-
-    function updateSensorCard(distance) {
-      var sensorCard = document.getElementById("sensorCard");
-      var color = "#00add6"; // Warna default
-
-      if (distance < 70) {
-        color = "#e74c3c"; // Merah untuk nilai kurang dari 50
-      } else if (distance >= 50 && distance < 150) {
-        color = "#f39c12"; // Orange untuk nilai antara 50 dan 100
       }
 
-      sensorCard.style.backgroundColor = color;
-    }
+      function getCurrentTime() {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const seconds = now.getSeconds();
+        return `${hours}:${minutes}:${seconds}`;
+      }
 
-    setInterval(updateSensorReading, 1000);
-  </script>
-</body>
+      function updateSensorCard(distance) {
+        var sensorCard = document.getElementById("sensorCard");
+        var color = "#00add6";
 
+        if (distance < 70) {
+          color = "#e74c3c";
+        } else if (distance >= 50 && distance < 150) {
+          color = "#f39c12";
+        }
+
+        sensorCard.style.backgroundColor = color;
+      }
+
+      function updateSensorReading() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4) {
+            if (this.status == 200) {
+              var x = new Date().getTime();
+              var y = parseFloat(this.responseText);
+
+              document.getElementById("Distance").innerHTML = y;
+              document.getElementById("Distance").classList.add("bounce");
+              setTimeout(() => {
+                document.getElementById("Distance").classList.remove("bounce");
+              }, 600);
+              document.getElementById("LastUpdated").innerHTML =
+                getCurrentTime();
+              updateSensorCard(y);
+
+              simpanDataSensorLocal(y, "Aktif");
+            } else {
+              // Tambahkan penanganan kesalahan
+              console.error(
+                "Gagal memperbarui data sensor. Status:",
+                this.status
+              );
+            }
+          }
+        };
+        xhttp.open("GET", "/distanceCm", true);
+        xhttp.send();
+      }
+
+      function updatePIRStatus() {
+        var xhttpPIR = new XMLHttpRequest();
+        xhttpPIR.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            var pirStatus = this.responseText;
+            document.getElementById("pirStatusValue").innerHTML = pirStatus;
+          }
+        };
+        xhttpPIR.open("GET", "/pirStatus", true);
+        xhttpPIR.send();
+      }
+
+      // Fungsi untuk mencari data sensor dari localStorage
+      function cariDataSensor() {
+        const searchTerm = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        const filter = document.getElementById("searchFilter").value;
+        const dataSensor = JSON.parse(localStorage.getItem("dataSensor")) || [];
+
+        const hasilPencarian = dataSensor.filter((data) => {
+          const dataValue = data[filter].toString().toLowerCase();
+          return dataValue.includes(searchTerm);
+        });
+
+        tampilkanHasilPencarian(hasilPencarian);
+      }
+
+      // Fungsi untuk menampilkan hasil pencarian
+      function tampilkanHasilPencarian(hasilPencarian) {
+        const searchResultsContainer = document.getElementById("searchResults");
+        searchResultsContainer.innerHTML = "";
+
+        if (hasilPencarian.length === 0) {
+          searchResultsContainer.innerHTML =
+            "<p>Tidak ada hasil pencarian.</p>";
+        } else {
+          hasilPencarian.forEach((data) => {
+            const resultItem = document.createElement("div");
+            resultItem.classList.add("sensor-card");
+            resultItem.innerHTML = `
+            <i class="sensor-icon fas fa-road"></i>
+            <span class="reading-label">Jarak</span>
+            <span class="reading-value">${data.jarak}</span>
+            <sup class="units">Cm</sup>
+            <br>
+            <span class="reading-label">Sensor Gerak</span>
+            <span class="reading-value">${data.statusPIR}</span>
+            <br>
+            <span class="reading-label">Waktu</span>
+            <span class="reading-value">${data.waktu}</span>
+          `;
+            searchResultsContainer.appendChild(resultItem);
+          });
+        }
+      }
+
+      function loadSensorDataFromLocal() {
+        const dataSensor = JSON.parse(localStorage.getItem("dataSensor")) || [];
+        console.log("Data Sensor dari Local Storage:", dataSensor);
+      }
+
+      var chartT = new Highcharts.Chart({
+    chart: { renderTo: "chart-distance" },
+    title: { text: "Chart Radar Distance" },
+    series: [
+        {
+            showInLegend: false,
+            data: [],
+            name: "Distance (CM)"
+        },
+    ],
+    plotOptions: {
+        line: {
+            animation: false,
+            dataLabels: { enabled: true },
+            marker: {
+                enabled: true,
+                radius: 6,
+                symbol: 'circle', // Menggunakan simbol lingkaran pada titik data
+                states: {
+                    hover: {
+                        enabled: true
+                    }
+                }
+            }
+        },
+        series: { color: "#0077a3" },
+    },
+    xAxis: {
+        type: "datetime",
+        dateTimeLabelFormats: { second: "%H:%M:%S" },
+        title: { text: "Waktu" },
+    },
+    yAxis: {
+        title: { text: "Jarak (CM)" },
+    },
+    credits: { enabled: false },
+});
+
+setInterval(function () {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var x = new Date().getTime();
+            var y = parseFloat(this.responseText);
+
+            if (chartT.series[0].data.length > 40) {
+                chartT.series[0].addPoint([x, y], true, true, true);
+            } else {
+                chartT.series[0].addPoint([x, y], true, false, true);
+            }
+
+            // Menambahkan animasi ke titik data yang baru muncul
+            var point = chartT.series[0].data[chartT.series[0].data.length - 1];
+            point.graphic.animate({ opacity: 1 }, 500); // Mengatur durasi animasi (500 ms)
+        }
+    };
+    xhttp.open("GET", "/distanceCm", true);
+    xhttp.send();
+}, 1000);
+
+
+      loadSensorDataFromLocal();
+
+      setInterval(updateSensorReading, 80);
+      setInterval(updatePIRStatus, 80);
+    </script>
+  </body>
 </html>
